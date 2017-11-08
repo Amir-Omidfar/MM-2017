@@ -1,0 +1,73 @@
+#include "mbed.h"
+
+PwmOut m1f(PC_7); //motor 1 Forward
+PwmOut m1b(PB_10); // motor 1 Backward
+
+PwmOut m2f(PA_7); //motor 2 Forward
+PwmOut m2b(PB_6); //motor 2 Backward
+
+DigitalOut led1(LED1);
+
+void flash()
+{
+    led1=0;
+    wait(0.5);
+    led1=1;
+}
+
+void moveForward()
+{
+   
+    m1f=0.1 // + correction;
+    m2f=0.1; // - correction
+    wait(3);
+    m1f=0;
+    m2f=0;
+    flash();
+}
+
+void moveBackward()
+{
+    m1b=0.1;
+    m2b=0.12;
+    wait(3);
+    m1b=0;
+    m2b=0;
+    flash();
+    
+}
+
+void turnRight()
+{
+    m1f=0.05;
+    m2f=0.12;
+    wait(3);
+    m1f=0;
+    m2f=0;
+    flash();
+    
+    
+}
+
+void turnLeft()
+{
+    m2f=0.06;
+    m1f=0.1;
+    wait(3);
+    m2f=0;
+    m1f=0;
+    flash();
+    
+}
+    
+int main() {
+    
+    led1=1;
+  
+    moveForward();
+    moveBackward();
+    turnRight();
+    turnLeft();    
+  
+}
+
