@@ -1,0 +1,127 @@
+#include "mbed.h"
+#include "QEI.h"
+
+Serial pc(SERIAL_TX,SERIAL_RX);
+PwmOut m1f(PC_7); //motor 1 Forward
+PwmOut m1b(PB_10); // motor 1 Backward
+
+PwmOut m2f(PA_7); //motor 2 Forward
+PwmOut m2b(PB_6); //motor 2 Backward
+
+///////////////Motor One Encoder//////////////////
+InterruptIn channelA(PA_15);
+InterruptIn channelB(PB_3);
+
+QEI encoder1(channelA, channelB, NC, 360, QEI::X4_ENCODING); 
+
+//////////////Motor Two Encoder///////////////////
+InterruptIn channelC(PC_4);
+InterruptIn channelD(PA_1);
+
+DigitalOut led1(LED1);
+
+volatile unsigned long pulses=0;
+void incrementEncoder() 
+{
+    pulses++;
+    
+ }
+    
+
+
+
+void systick(); //todo!!  --> correction 
+void flash();
+void moveForward();
+void moveBackward();
+void turnRight ();
+void turnLeft();
+
+int main() {
+  
+  pc.printf("Hello\n");  
+    led1=1;
+  
+    m1f=0.3;
+    m2f=0.5;
+    channelA.rise(&incrementEncoder);
+    channelA.fall(&incrementEncoder);
+      wait(3);
+        pc.printf("number of pulses: %d\n" ,pulses);
+        wait(1);
+         pc.printf("number of pulses: %d\n" ,pulses);
+         wait(1);
+          pc.printf("number of pulses: %d\n" ,pulses);
+          
+        
+    m1f=0;
+    m2f=0;
+    //channelA.rise(&incrementEncoder);
+    
+    
+ 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////Functions //////////////////////
+void turnLeft()
+{
+    m2f=0.06;
+    m1f=0.1;
+    wait(3);
+    m2f=0;
+    m1f=0;
+    flash();
+    
+}
+ 
+void turnRight()
+{
+    m1f=0.05;
+    m2f=0.12;
+    wait(3);
+    m1f=0;
+    m2f=0;
+    flash();   
+}
+
+void moveBackward()
+{
+    m1b=0.1;
+    m2b=0.12;
+    wait(3);
+    m1b=0;
+    m2b=0;
+    flash();
+    
+}
+void moveForward()
+{
+   
+    m1f=0.3; // + correction;
+    m2f=0.5; // - correction
+    wait(3);
+    m1f=0;
+    m2f=0;
+    flash();
+}
+
+void flash()
+{
+    led1=0;
+    wait(0.5);
+    led1=1;
+}
+
+
+
